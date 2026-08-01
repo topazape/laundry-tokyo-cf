@@ -1,27 +1,39 @@
 {
-	// エディタ(jsonls)の補完・検証用。wrangler 自体は読まない
-	"$schema": "https://unpkg.com/wrangler/config-schema.json",
-	// Cloudflare 上の Worker 識別子。後から変えると「別の Worker」として新規作成される
-	"name": "laundry-tokyo",
-	// エントリポイント。make build が生成する wasm ロード用シム(ロジックなし)
-	"main": "./build/worker.mjs",
-	// ランタイムの挙動をこの日付時点に固定する(lockfile のランタイム版)。
-	// 意図してランタイム仕様を上げたい時だけ変更する
-	"compatibility_date": "2026-08-01",
-	// cron 専用 Worker のため、自動付与される公開 URL(*.workers.dev)を無効化
-	"workers_dev": false,
-	// dev/deploy の前段で Go → wasm をビルドする
-	"build": {
-		"command": "make build"
-	},
-	// scheduled ハンドラの起動スケジュール (UTC 基準)
-	"triggers": {
-		"crons": [
-			"0 15 * * *"
-		],
-	},
-	// Workers Logs の有効化。cron Worker の動作確認手段は実質ログだけなので必須級
-	"observability": {
-		"enabled": true
-	},
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+
+  "name": "laundry-tokyo",
+  "main": "./build/worker.mjs",
+  "compatibility_date": "2026-08-01",
+  "workers_dev": false,
+  "build": {
+    "command": "make build",
+  },
+  "observability": {
+    "enabled": true,
+  },
+
+  "triggers": {
+    "crons": ["0 3 1 * *"],
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "eff246d6c8dd4e06bd35ac6fdb759e2f",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "laundry-tokyo",
+    },
+  ],
+  "vars": {
+    "PREF": "東京都", // 対象都道府県
+    "MAX_SHOPS": "0", // 0 = 無制限。試験時 "50"
+    "POLL_SPREAD_SEC": "55", // 全店への稼働状況リクエストをこの秒数に均等分散
+    "POLL_CONCURRENCY": "8", // HTTP 同時リクエスト数の上限
+    "USER_AGENT": "",
+    "SHOP_INGEST_URL": "", // Pipelines stream (shop) の ingest endpoint
+    "OBS_INGEST_URL": "", // Pipelines stream (obs) の ingest endpoint
+  },
 }
