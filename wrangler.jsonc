@@ -9,11 +9,18 @@
     "command": "make build",
   },
   "observability": {
-    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+    },
+    "traces": {
+      "enabled": false,
+    },
   },
 
   "triggers": {
-    "crons": ["0 3 1 * *"],
+    // "crons": ["0 3 1 * *"],
+    "crons": ["30 1 03 08 *"],
   },
   "kv_namespaces": [
     {
