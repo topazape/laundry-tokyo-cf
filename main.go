@@ -17,7 +17,7 @@ import (
 )
 
 // const cronSeed = "0 3 1 * *"
-const cronSeed = "30 1 03 08 *"
+const cronSeed = "0 2 3 8 *"
 
 func main() {
 	cron.ScheduleTask(task)
