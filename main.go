@@ -16,7 +16,7 @@ import (
 	"github.com/syumai/workers/cloudflare/fetch"
 )
 
-const cronSeed = "0 3 1 * *"
+const cronSeed = "0 3 * * 1"
 
 func main() {
 	cron.ScheduleTask(task)
