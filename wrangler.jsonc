@@ -32,8 +32,8 @@
     "MAX_SHOPS": "0", // 0 = 無制限。試験時 "50"
     "POLL_SPREAD_SEC": "55", // 全店への稼働状況リクエストをこの秒数に均等分散
     "POLL_CONCURRENCY": "8", // HTTP 同時リクエスト数の上限
-    "USER_AGENT": "",
-    "SHOP_INGEST_URL": "", // Pipelines stream (shop) の ingest endpoint
+    "USER_AGENT": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "SHOP_INGEST_URL": "https://cee53eb69c87469fb4203e9490332d30.ingest.cloudflare.com", // Pipelines stream (shop) の ingest endpoint
     "OBS_INGEST_URL": "", // Pipelines stream (obs) の ingest endpoint
   },
 }
