@@ -15,7 +15,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const fetchTimeout = 50 * time.Second
+const fetchTimeout = 120 * time.Second
 
 type Monitor struct {
 	Laundrich   *laundrich.Client
@@ -73,7 +73,7 @@ func (m *Monitor) Run(ctx context.Context) error {
 		ok++
 	}
 
-	log.Printf("monitor: shops=%d/%d rows=%d", ok, len(ids), len(statuses))
+	log.Printf("monitor: shops=%d/%d fetched=%d rows=%d elapsed=%s", ok, len(ids), len(raws), len(statuses), time.Since(fetchedAt))
 
 	if err := m.R2.PutRawStatuses(fetchedAt, buf.Bytes()); err != nil {
 		return fmt.Errorf("R2.PutRawStatuses: %w", err)
@@ -83,6 +83,8 @@ func (m *Monitor) Run(ctx context.Context) error {
 		return fmt.Errorf("Ingest.Send: %w", err)
 	}
 
+	log.Printf("monitor: done total=%s", time.Since(fetchedAt))
+
 	return nil
 }
 
@@ -90,18 +92,25 @@ func (m *Monitor) fetchAll(ctx context.Context, ids []string) ([][]byte, error) 
 	interval := time.Duration(m.SpreadSec) * time.Second / time.Duration(len(ids))
 
 	raws := make([][]byte, len(ids))
+	errs := make([]error, len(ids))
 
 	var g errgroup.Group
 	g.SetLimit(m.Concurrency)
+
+	dispatched := 0
 
 	for i, id := range ids {
 		if ctx.Err() != nil {
 			break
 		}
 
+		dispatched++
+
 		g.Go(func() error {
 			raw, err := m.Laundrich.FetchStatusesRaw(ctx, id)
 			if err != nil {
+				errs[i] = err
+
 				return nil
 			}
 
@@ -115,6 +124,29 @@ func (m *Monitor) fetchAll(ctx context.Context, ids []string) ([][]byte, error) 
 
 	if err := g.Wait(); err != nil {
 		return nil, err
+	}
+
+	if dispatched < len(ids) {
+		log.Printf("monitor: not dispatched=%d (%v)", len(ids)-dispatched, ctx.Err())
+	}
+
+	var (
+		failed   int
+		firstErr error
+	)
+
+	for _, err := range errs {
+		if err != nil {
+			failed++
+
+			if firstErr == nil {
+				firstErr = err
+			}
+		}
+	}
+
+	if failed > 0 {
+		log.Printf("monitor: fetch failed=%d first_err=%v", failed, firstErr)
 	}
 
 	got := make([][]byte, 0, len(raws))

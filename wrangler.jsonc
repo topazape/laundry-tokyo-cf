@@ -19,7 +19,7 @@
   },
 
   "triggers": {
-    "crons": ["0 3 * * 1", "* * * * *"],
+    "crons": ["0 3 * * 1", "*/5 * * * *"],
   },
   "kv_namespaces": [
     {
@@ -36,8 +36,8 @@
   "vars": {
     "PREF": "東京都", // 対象都道府県
     "MAX_SHOPS": "0", // 0 = 無制限。試験時 "50"
-    "MONITOR_SPREAD_SEC": "20", // 全店への稼働状況リクエストをこの秒数に均等分散
-    "MONITOR_CONCURRENCY": "8", // HTTP 同時リクエスト数の上限; platform limit 6
+    "MONITOR_SPREAD_SEC": "60", // 全店への稼働状況リクエストをこの秒数に均等分散（上限目安）
+    "MONITOR_CONCURRENCY": "6", // HTTP 同時リクエスト数の上限; platform limit 6
     "USER_AGENT": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "SHOP_INGEST_URL": "https://cee53eb69c87469fb4203e9490332d30.ingest.cloudflare.com", // Pipelines stream (shop) の ingest endpoint
     "STATUS_INGEST_URL": "https://c1fc0ea330bb4cb79db1b08802445ccb.ingest.cloudflare.com", // Pipelines stream (status) の ingest endpoint

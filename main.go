@@ -19,7 +19,7 @@ import (
 
 const (
 	cronSeed    = "0 3 * * 1"
-	cronMonitor = "* * * * *"
+	cronMonitor = "*/5 * * * *"
 )
 
 func main() {
