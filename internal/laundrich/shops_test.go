@@ -47,21 +47,38 @@ func TestParseShop(t *testing.T) {
 		{
 			name: "facilities without code 1 is not IoT-enabled",
 			in: shopRecord{
-				ANKSHOPID: "x", NUMFACILITYLIST: "16,21",
+				ANKSHOPID:       "x",
+				NUMFACILITYLIST: "16,21",
 			},
 			want: Shop{
-				ShopID: "x", IsIoTEnabled: false, Facilities: []string{"16", "21"},
+				ShopID:       "x",
+				IsIoTEnabled: false,
+				Facilities:   []string{"16", "21"},
 			},
 		},
 		{
 			name: "null facilities normalized to empty slice",
-			in:   shopRecord{ANKSHOPID: "x"},
-			want: Shop{ShopID: "x", Facilities: []string{}},
+			in: shopRecord{
+				ANKSHOPID: "x",
+			},
+			want: Shop{
+				ShopID:     "x",
+				Facilities: []string{},
+			},
 		},
 		{
 			name: "invalid coords fall back to zero",
-			in:   shopRecord{ANKSHOPID: "x", ANKPARALLEL: "", ANKLONGITUDE: "abc"},
-			want: Shop{ShopID: "x", Lat: 0, Lng: 0, Facilities: []string{}},
+			in: shopRecord{
+				ANKSHOPID:    "x",
+				ANKPARALLEL:  "",
+				ANKLONGITUDE: "abc",
+			},
+			want: Shop{
+				ShopID:     "x",
+				Lat:        0,
+				Lng:        0,
+				Facilities: []string{},
+			},
 		},
 	}
 

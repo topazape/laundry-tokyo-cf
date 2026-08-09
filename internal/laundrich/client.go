@@ -51,9 +51,38 @@ func (c *Client) FetchShopsRaw(ctx context.Context) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fetch shops: %w", err)
 	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
+	defer resp.Body.Close() //nolint:errcheck
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read body: %w", err)
+	}
+
+	return body, nil
+}
+
+func (c *Client) FetchStatusesRaw(ctx context.Context, shopID string) ([]byte, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("build request: %w", err)
+	}
+
+	req.URL.RawQuery = url.Values{
+		"className": {"AilsShopDetailOperationalStatus"},
+		"shopId":    {shopID},
+	}.Encode()
+
+	req.Header.Set("User-Agent", c.userAgent)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("fetch statuses: %w", err)
+	}
+	defer resp.Body.Close() //nolint:errcheck
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status %d", resp.StatusCode)
