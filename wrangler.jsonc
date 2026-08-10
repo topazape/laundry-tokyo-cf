@@ -40,6 +40,6 @@
     "MONITOR_CONCURRENCY": "6", // HTTP 同時リクエスト数の上限; platform limit 6
     "USER_AGENT": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "SHOP_INGEST_URL": "https://cee53eb69c87469fb4203e9490332d30.ingest.cloudflare.com", // Pipelines stream (shop) の ingest endpoint
-    "STATUS_INGEST_URL": "https://c1fc0ea330bb4cb79db1b08802445ccb.ingest.cloudflare.com", // Pipelines stream (status) の ingest endpoint
+    "STATUS_INGEST_URL": "https://b286541c029a434a8c0f7d387e2ffc5c.ingest.cloudflare.com", // Pipelines stream (status) の ingest endpoint
   },
 }
