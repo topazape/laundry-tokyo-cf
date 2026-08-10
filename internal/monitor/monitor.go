@@ -15,7 +15,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const fetchTimeout = 120 * time.Second
+const fetchTimeout = 240 * time.Second
 
 type Monitor struct {
 	Laundrich   *laundrich.Client
