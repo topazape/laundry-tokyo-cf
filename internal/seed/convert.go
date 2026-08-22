@@ -2,7 +2,8 @@ package seed
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
 	"laundry-tokyo/internal/laundrich"
 	"time"
@@ -67,7 +68,7 @@ func toStreamShops(shops []laundrich.Shop, fetchedAt time.Time) []any {
 }
 
 func rawToNDJSON(raw []byte) ([]byte, error) {
-	var elems []json.RawMessage
+	var elems []jsontext.Value
 	if err := json.Unmarshal(raw, &elems); err != nil {
 		return nil, fmt.Errorf("unmarshal raw shops: %w", err)
 	}

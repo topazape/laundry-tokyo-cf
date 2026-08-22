@@ -1,7 +1,7 @@
 package seed
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"laundry-tokyo/internal/laundrich"
 	"reflect"
 	"testing"
@@ -131,7 +131,7 @@ func TestRawToNDJSON(t *testing.T) {
 		want string
 	}{
 		{
-			// キー順が辞書順でない入力が原文のまま出れば RawMessage が効いている
+			// キー順が辞書順でない入力が原文のまま出れば jsontext.Value が効いている
 			name: "preserves element bytes as-is",
 			in:   `[{"b":1,"a":2},{"x":"y"}]`,
 			want: "{\"b\":1,\"a\":2}\n{\"x\":\"y\"}\n",
